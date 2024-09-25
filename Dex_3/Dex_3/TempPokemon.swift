@@ -51,4 +51,7 @@ struct TempPokemon:  Decodable {
         }
     }
     
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: PokemonKeys.self)
+    }
 }
