@@ -9,7 +9,10 @@ import SwiftUI
 import CoreData
 
 struct ContentView: View {
-    @Environment(\.managedObjectContext) private var viewContext
+    
+    @EnvironmentObject var pokemon: Pokemon
+    
+    //@Environment(\.managedObjectContext) private var viewContext
     
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \Pokemon.id, ascending: true)],
@@ -17,24 +20,35 @@ struct ContentView: View {
     private var pokedex: FetchedResults<Pokemon>
 
     var body: some View {
-       
-        NavigationView {
-           
-            List {
-                ForEach(pokedex) { pokemon in
-                    NavigationLink {
-                        Text("\(String(describing: pokemon.id)) \(pokemon.name!.capitalized)")
-                    } label: {
-                        Text("\(String(describing: pokemon.id)) \(pokemon.name!.capitalized)")
-                   }
+        NavigationStack {
+            List(pokedex) { pokemon in
+                NavigationLink(value: pokemon) {
+                    AsyncImage(url: pokemon.sprite) { image in
+                    image.resizable()
+                        scaledToFit()
+                    } placeholder: {
+                        ProgressView()
+                    }
+                    .frame(width: 100, height: 100)
+                    
+                    Text(pokemon.name!.capitalized)
                 }
-               
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                 
+                    EditButton()
                 }
             }
+            .navigationTitle("Pokedex")
+            .navigationDestination(for: Pokemon.self, destination: { image in
+                AsyncImage(url: image.sprite) { image in
+                image.resizable()
+                    scaledToFit()
+                } placeholder: {
+                    ProgressView()
+                }
+                .frame(width: 100, height: 100)
+            })
         }
     }
 }
@@ -46,6 +60,30 @@ private let itemFormatter: DateFormatter = {
     return formatter
 }()
 
-#Preview {
-    ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+
+struct Pokemon_Preview: PreviewProvider {
+    let poke = PersistenceController.shared
+    static var previews: some View {
+        
+        PokemonDetail().environmentObject(SamplePokemon.samplePokemon)
+    }
 }
+
+
+//struct PokemonDetail_Preview: PreviewProvider{
+//    static var previews: some View {
+//        let context = PersistenceController.preview.container.viewContext
+//        
+//        let fetchRequest: NSFetchRequest<Pokemon> = Pokemon.fetchRequest()
+//        fetchRequest.fetchLimit = 1
+//        
+//        
+//        return
+//    }
+//}
+
+
+
+//#Preview {
+//    ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext) 
+//}
