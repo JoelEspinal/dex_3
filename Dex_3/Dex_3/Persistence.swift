@@ -14,7 +14,7 @@ struct PersistenceController {
 
     @MainActor
     static let preview: PersistenceController = {
-        let result = PersistenceController(inMemory: true)
+        let result = PersistenceController()
         let viewContext = result.container.viewContext
         
         let samplePokemon = Pokemon(context: viewContext)
@@ -41,6 +41,7 @@ struct PersistenceController {
                 fatalError("Unresolved error \(error), \(error.userInfo)")
             }
         })
+
         container.viewContext.automaticallyMergesChangesFromParent = true
     }
 }

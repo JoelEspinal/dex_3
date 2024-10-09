@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct FetchCpontroller {
+struct FetchController {
     enum NetworkError: Error {
         case badURL, BadResponse, badData
     }
@@ -18,7 +18,7 @@ struct FetchCpontroller {
         var allPokemon: [TempPokemon] = []
         
         var fetchCompoonents = URLComponents(url: baseUrl, resolvingAgainstBaseURL: true)
-        fetchCompoonents?.queryItems = [URLQueryItem(name: "limit", value: "386")]
+        fetchCompoonents?.queryItems = [URLQueryItem(name: "limit", value: "20")]
         
         guard let fetchURL = fetchCompoonents?.url else {
             throw NetworkError.badURL

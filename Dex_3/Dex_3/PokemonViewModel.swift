@@ -19,9 +19,9 @@ class PokemonViewModel: ObservableObject {
     
     @Published private(set) var status = Status.notStarted
     
-    private let controller: FetchCpontroller
+    private let controller: FetchController
     
-    init(controller: FetchCpontroller) {
+    init(controller: FetchController) {
         self.controller = controller
         
         Task {
